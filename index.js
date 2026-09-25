@@ -86,6 +86,23 @@ app.delete('/api/notes/:id', (request, response) => {
   response.status(204).end()
 })
 
+app.put('/api/notes/:id', (request, response) => {
+  const id = request.params.id
+  const body = request.body
+
+  const note = notes.find(n => n.id === id)
+
+  if (!note) {
+    return response.status(404).end()
+  }
+
+  const updatedNote = { ...note, important: body.important }
+
+  notes = notes.map(n => n.id !== id ? n : updatedNote)
+
+  response.json(updatedNote)
+})
+
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoints' })
 }
